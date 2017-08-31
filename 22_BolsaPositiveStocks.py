@@ -8,14 +8,13 @@ class BolsaPositiveStocks(MRJob):
             yield company,(float(stock), date)
 
     def reducer(self, key, values):
-        diferencias = []
         stocks = []
-        possitive_stocks = []
         always_possitive = True
         for stock, date in values:
             stocks.append((stock, date))
         # Se organiza por fecha
         sorted_stocks = sorted(stocks, key=lambda x: x[1])
+
         i = 0
         for stock, date in sorted_stocks:
             # Verifica si es el primer valor
@@ -33,7 +32,7 @@ class BolsaPositiveStocks(MRJob):
             i =+ 1
         # Verifica si la accion siempre se mantuvo estable o creciendo
         if always_possitive:
-            yield "Company " + key, 0
+            yield "Company " + key, date
 
 if __name__ == '__main__':
     BolsaPositiveStocks.run()
